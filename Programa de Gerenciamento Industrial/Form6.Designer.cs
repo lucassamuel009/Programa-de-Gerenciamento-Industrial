@@ -34,11 +34,6 @@
             button1 = new Button();
             comboBox1 = new ComboBox();
             dataGridView1 = new DataGridView();
-            Idlote = new DataGridViewTextBoxColumn();
-            nome_lote = new DataGridViewTextBoxColumn();
-            data_criação = new DataGridViewTextBoxColumn();
-            cliente = new DataGridViewTextBoxColumn();
-            status = new DataGridViewTextBoxColumn();
             button2 = new Button();
             button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -105,50 +100,17 @@
             // 
             // dataGridView1
             // 
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Idlote, nome_lote, data_criação, cliente, status });
             dataGridView1.Location = new Point(17, 617);
             dataGridView1.Margin = new Padding(4, 5, 4, 5);
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.RowTemplate.Height = 25;
             dataGridView1.Size = new Size(776, 363);
             dataGridView1.TabIndex = 12;
-            // 
-            // Idlote
-            // 
-            Idlote.HeaderText = "Idlote";
-            Idlote.MinimumWidth = 8;
-            Idlote.Name = "Idlote";
-            Idlote.Width = 150;
-            // 
-            // nome_lote
-            // 
-            nome_lote.HeaderText = "nome_lote";
-            nome_lote.MinimumWidth = 8;
-            nome_lote.Name = "nome_lote";
-            nome_lote.Width = 150;
-            // 
-            // data_criação
-            // 
-            data_criação.HeaderText = "data_criação";
-            data_criação.MinimumWidth = 8;
-            data_criação.Name = "data_criação";
-            data_criação.Width = 150;
-            // 
-            // cliente
-            // 
-            cliente.HeaderText = "cliente";
-            cliente.MinimumWidth = 8;
-            cliente.Name = "cliente";
-            cliente.Width = 150;
-            // 
-            // status
-            // 
-            status.HeaderText = "status";
-            status.MinimumWidth = 8;
-            status.Name = "status";
-            status.Width = 150;
             // 
             // button2
             // 
@@ -196,7 +158,6 @@
             Margin = new Padding(4, 5, 4, 5);
             Name = "Form6";
             Text = "Form6";
-            Load += Form6_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();

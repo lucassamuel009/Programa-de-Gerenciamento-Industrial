@@ -110,6 +110,7 @@
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(301, 31);
             textBox1.TabIndex = 5;
+            textBox1.TextChanged += textBox1_TextChanged;
             // 
             // textBox2
             // 

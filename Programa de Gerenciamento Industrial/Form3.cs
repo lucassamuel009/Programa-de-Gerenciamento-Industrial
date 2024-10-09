@@ -7,7 +7,6 @@ namespace Programa_de_Gerenciamento_Industrial
 {
     public partial class Form3 : Form
     {
-        // String de conexão com o banco de dados
         private string connectionString = "Host=aws-0-sa-east-1.pooler.supabase.com;Port=6543;Username=postgres.stjotefgyhrhlobwldqs;Password=Q9nWPZV8.reuyMC;Database=postgres";
 
         public Form3()
@@ -18,7 +17,7 @@ namespace Programa_de_Gerenciamento_Industrial
         private void Form3_Load(object sender, EventArgs e)
         {
             dataGridViewLotes.Rows.Clear();
-            CarregarLotes(); // Chama o método para carregar os dados
+            CarregarLotes(); 
         }
 
         private void CarregarLotes()
@@ -34,9 +33,8 @@ namespace Programa_de_Gerenciamento_Industrial
                     using (var adapter = new NpgsqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();
-                        adapter.Fill(dt); // Preenche o DataTable diretamente
+                        adapter.Fill(dt); 
 
-                        // Atualiza o DataGridView
                         dataGridViewLotes.DataSource = dt;
                     }
                 }
@@ -54,7 +52,7 @@ namespace Programa_de_Gerenciamento_Industrial
 
         private void dataGridViewLotes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Lógica para lidar com o clique nas células do DataGridView, se necessário
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -90,7 +88,6 @@ namespace Programa_de_Gerenciamento_Industrial
 
         private void button5_Click(object sender, EventArgs e)
         {
-            // Sair do form
             this.Close(); 
         }
     }

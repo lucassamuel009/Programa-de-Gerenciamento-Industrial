@@ -25,7 +25,6 @@ namespace Programa_de_Gerenciamento_Industrial
             string status = textBox3.Text;
             int quantidade = Convert.ToInt32(textBox2.Text);
 
-            // String de conexão com o banco de dados
             string connectionString = "Host=aws-0-sa-east-1.pooler.supabase.com;Port=6543;Username=postgres.stjotefgyhrhlobwldqs;Password=Q9nWPZV8.reuyMC;Database=postgres";
 
             using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
@@ -44,7 +43,7 @@ namespace Programa_de_Gerenciamento_Industrial
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Lote adicionado com sucesso!");
 
-                    this.Close(); // Fecha a janela após salvar
+                    this.Close(); 
                 }
                 catch (NpgsqlException ex)
                 {

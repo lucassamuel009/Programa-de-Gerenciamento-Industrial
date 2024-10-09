@@ -13,7 +13,7 @@ namespace Programa_de_Gerenciamento_Industrial
             "Username=postgres.stjotefgyhrhlobwldqs;" +
             "Password=Q9nWPZV8.reuyMC;" +
             "Database=postgres;" +
-            "Pooling=true;" +  // Ativa o pooling para otimizar conexões
+            "Pooling=true;" +  
             "MinPoolSize=1;MaxPoolSize=10;Timeout=15;CommandTimeout=60;";
 
         public Form8()
@@ -50,7 +50,6 @@ namespace Programa_de_Gerenciamento_Industrial
 
         private async void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Pegar o valor selecionado no ComboBox
             if (int.TryParse(comboBox1.SelectedItem.ToString(), out int idLoteSelecionado))
             {
                 await CarregarDadosLoteAsync(idLoteSelecionado);
@@ -91,7 +90,6 @@ namespace Programa_de_Gerenciamento_Industrial
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            // Capturar os valores dos campos de edição
             string nome_lote = textBox1.Text;
             DateTime data_criação = dateTimePicker1.Value;
             string status = textBox3.Text;

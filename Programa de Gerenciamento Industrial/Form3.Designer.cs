@@ -34,11 +34,6 @@
             button3 = new Button();
             button4 = new Button();
             button5 = new Button();
-            idLote = new DataGridViewTextBoxColumn();
-            conteudo = new DataGridViewTextBoxColumn();
-            dataCriacao = new DataGridViewTextBoxColumn();
-            status = new DataGridViewTextBoxColumn();
-            quantidade = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridViewLotes).BeginInit();
             SuspendLayout();
             // 
@@ -49,7 +44,6 @@
             dataGridViewLotes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewLotes.BackgroundColor = SystemColors.Control;
             dataGridViewLotes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewLotes.Columns.AddRange(new DataGridViewColumn[] { idLote, conteudo, dataCriacao, status, quantidade });
             dataGridViewLotes.Location = new Point(24, 113);
             dataGridViewLotes.Margin = new Padding(4, 5, 4, 5);
             dataGridViewLotes.Name = "dataGridViewLotes";
@@ -125,41 +119,6 @@
             button5.UseVisualStyleBackColor = false;
             button5.Click += button5_Click;
             // 
-            // idLote
-            // 
-            idLote.HeaderText = "idLote";
-            idLote.MinimumWidth = 8;
-            idLote.Name = "idLote";
-            idLote.ReadOnly = true;
-            // 
-            // conteudo
-            // 
-            conteudo.HeaderText = "conteudo";
-            conteudo.MinimumWidth = 8;
-            conteudo.Name = "conteudo";
-            conteudo.ReadOnly = true;
-            // 
-            // dataCriacao
-            // 
-            dataCriacao.HeaderText = "dataCriacao";
-            dataCriacao.MinimumWidth = 8;
-            dataCriacao.Name = "dataCriacao";
-            dataCriacao.ReadOnly = true;
-            // 
-            // status
-            // 
-            status.HeaderText = "status";
-            status.MinimumWidth = 8;
-            status.Name = "status";
-            status.ReadOnly = true;
-            // 
-            // quantidade
-            // 
-            quantidade.HeaderText = "quantidade";
-            quantidade.MinimumWidth = 8;
-            quantidade.Name = "quantidade";
-            quantidade.ReadOnly = true;
-            // 
             // Form3
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -192,10 +151,5 @@
         private Button button3;
         private Button button4;
         private Button button5;
-        private DataGridViewTextBoxColumn idLote;
-        private DataGridViewTextBoxColumn conteudo;
-        private DataGridViewTextBoxColumn dataCriacao;
-        private DataGridViewTextBoxColumn status;
-        private DataGridViewTextBoxColumn quantidade;
     }
 }
