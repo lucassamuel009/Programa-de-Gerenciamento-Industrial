@@ -7,7 +7,7 @@ namespace Programa_de_Gerenciamento_Industrial
 {
     public partial class Form4 : Form
     {
-        private const string ConnectionString = "Host=aws-0-sa-east-1.pooler.supabase.com;Port=6543;Username=postgres.stjotefgyhrhlobwldqs;Password=Q9nWPZV8.reuyMC;Database=postgres;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=100;";
+        private const string ConnectionString = "Host=aws-0-sa-east-1.pooler.supabase.com;Port=6543;Username=postgres.stjotefgyhrhlobwldqs;Password=Q9nWPZV8.reuyMC;Database=postgres;Pooling=true;Minimum Pool Size=5;Maximum Pool Size=100;Timeout=30;CommandTimeout=30";
 
         public Form4()
         {
@@ -17,27 +17,40 @@ namespace Programa_de_Gerenciamento_Industrial
 
         private void LoadComboBoxes()
         {
-            LoadComboBox(comboBox1, "SELECT nome_lote FROM lotes");
-            LoadComboBox(comboBox2, "SELECT nome_indústria FROM indústria");
-            LoadComboBox(comboBox3, "SELECT nome FROM cliente");
+            using (var conn = new NpgsqlConnection(ConnectionString))
+            {
+                conn.Open();
+                LoadComboBoxData(comboBox1, conn, "SELECT nome_lote FROM lotes");
+                LoadComboBoxData(comboBox2, conn, "SELECT nome_indústria FROM indústria");
+                LoadComboBoxData(comboBox3, conn, "SELECT nome FROM cliente");
+            }
         }
 
-        private void LoadComboBox(ComboBox comboBox, string query)
+        private void LoadComboBoxData(ComboBox comboBox, NpgsqlConnection conn, string query)
         {
-            using (var con = new NpgsqlConnection(ConnectionString))
-            using (var da = new NpgsqlDataAdapter(query, con))
+            using (var cmd = new NpgsqlCommand(query, conn))
+            using (var da = new NpgsqlDataAdapter(cmd))
             {
                 var dt = new DataTable();
                 da.Fill(dt);
                 comboBox.DataSource = dt;
-                comboBox.DisplayMember = dt.Columns[0].ColumnName;  // Coluna de nome da tabela consultada
+                comboBox.DisplayMember = dt.Columns[0].ColumnName;
             }
         }
 
-        private void button5_Click(object sender, EventArgs e) => this.Close();
+        private void button5_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (comboBox1.SelectedItem == null || comboBox2.SelectedItem == null || comboBox3.SelectedItem == null)
+            {
+                MessageBox.Show("Por favor, selecione todos os campos.");
+                return;
+            }
+
             string nomeLote = comboBox1.Text;
             string nomeIndústria = comboBox2.Text;
             string nomeCliente = comboBox3.Text;
@@ -52,8 +65,8 @@ namespace Programa_de_Gerenciamento_Industrial
                     int idIndústria = GetId(conn, "SELECT id_indústria FROM indústria WHERE nome_indústria = @nome", nomeIndústria);
                     int idCliente = GetId(conn, "SELECT id_cliente FROM cliente WHERE nome = @nome", nomeCliente);
 
-                    ExecuteNonQuery(conn, "INSERT INTO cliente_lote (id_lote, id_cliente) VALUES (@id_lote, @id_cliente)", idLote, idCliente);
-                    ExecuteNonQuery(conn, "INSERT INTO indústria_lote (id_lote, id_indústria) VALUES (@id_lote, @id_indústria)", idLote, idIndústria);
+                    ExecuteInsert(conn, "INSERT INTO cliente_lote (id_lote, id_cliente) VALUES (@id_lote, @id_cliente)", idLote, idCliente);
+                    ExecuteInsert(conn, "INSERT INTO indústria_lote (id_lote, id_indústria) VALUES (@id_lote, @id_indústria)", idLote, idIndústria);
 
                     MessageBox.Show("Lote encomendado com sucesso!");
                 }
@@ -69,24 +82,24 @@ namespace Programa_de_Gerenciamento_Industrial
             using (var cmd = new NpgsqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@nome", nome);
-                return (int)cmd.ExecuteScalar();
+                var result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToInt32(result) : throw new Exception("ID não encontrado.");
             }
         }
 
-        private void ExecuteNonQuery(NpgsqlConnection conn, string query, int idLote, int idOutro)
+        private void ExecuteInsert(NpgsqlConnection conn, string query, int idLote, int idOutro)
         {
             using (var cmd = new NpgsqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@id_lote", idLote);
-                cmd.Parameters.AddWithValue("@id_cliente", idOutro);
+                cmd.Parameters.AddWithValue("@id_cliente", idOutro); 
                 cmd.ExecuteNonQuery();
             }
         }
 
         private void Form4_Load(object sender, EventArgs e)
         {
-            
+           
         }
     }
 }
-

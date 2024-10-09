@@ -16,10 +16,8 @@ namespace Programa_de_Gerenciamento_Industrial
         
         private bool VerificarLogin(string usuario, string senha)
         {
-            // String de conexão (substitua pelos seus parâmetros)
             string connectionString = "Host=aws-0-sa-east-1.pooler.supabase.com;Port=6543;Username=postgres.stjotefgyhrhlobwldqs;Password=Q9nWPZV8.reuyMC;Database=postgres";
 
-            // Comando SQL para verificar usuário e senha
             string query = "SELECT COUNT(1) FROM admin WHERE nome=@usuario AND senha=@senha";
 
             using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
@@ -33,7 +31,6 @@ namespace Programa_de_Gerenciamento_Industrial
 
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
 
-                    // Se encontrar um usuário e senha válidos
                     if (count == 1)
                     {
                         return true;
@@ -85,7 +82,7 @@ namespace Programa_de_Gerenciamento_Industrial
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-
+            
         }
     }
 }

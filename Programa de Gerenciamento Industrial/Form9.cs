@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Programa_de_Gerenciamento_Industrial
@@ -13,36 +14,48 @@ namespace Programa_de_Gerenciamento_Industrial
             InitializeComponent();
         }
 
-        private void Form9_Load(object sender, EventArgs e)
+        private async void Form9_Load(object sender, EventArgs e)
         {
-            CarregarLotes();
+            await CarregarLotesAsync();
         }
 
-        private void CarregarLotes()
+        private async Task CarregarLotesAsync()
         {
             const string query = "SELECT id_lote, nome_lote FROM lotes";
 
-            using var conn = new NpgsqlConnection(ConnectionString);
-            conn.Open();
-
-            using var cmd = new NpgsqlCommand(query, conn);
-            using var reader = cmd.ExecuteReader();
-
-            while (reader.Read())
+            try
             {
-                comboBox1.Items.Add(new
+                using var conn = new NpgsqlConnection(ConnectionString);
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand(query, conn);
+                using var reader = await cmd.ExecuteReaderAsync();
+
+                comboBox1.BeginUpdate();
+                comboBox1.Items.Clear();
+
+                while (await reader.ReadAsync())
                 {
-                    Id = reader["id_lote"],
-                    Conteudo = reader["nome_lote"]
-                });
+                    comboBox1.Items.Add(new
+                    {
+                        Id = reader["id_lote"],
+                        Conteudo = reader["nome_lote"]
+                    });
+                }
+
+                comboBox1.EndUpdate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar lotes: " + ex.Message);
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
             if (comboBox1.SelectedItem is not null)
             {
-                ExcluirLote(comboBox1.SelectedItem);
+                await ExcluirLoteAsync(comboBox1.SelectedItem);
             }
             else
             {
@@ -50,31 +63,57 @@ namespace Programa_de_Gerenciamento_Industrial
             }
         }
 
-        private void ExcluirLote(object loteSelecionado)
+        private async Task ExcluirLoteAsync(object loteSelecionado)
         {
             var lote = (dynamic)loteSelecionado;
             int idLote = Convert.ToInt32(lote.Id);
-            const string query = "DELETE FROM lotes WHERE id_lote = @id_lote";
 
-            using var conn = new NpgsqlConnection(ConnectionString);
-            conn.Open();
+            const string queryDelete = "DELETE FROM lotes WHERE id_lote = @id_lote";
 
+            try
+            {
+                using var conn = new NpgsqlConnection(ConnectionString);
+                await conn.OpenAsync();
+
+                using var cmd = new NpgsqlCommand(queryDelete, conn);
+                cmd.Parameters.AddWithValue("@id_lote", idLote);
+
+                if (await VerificarReferenciasAsync(conn, idLote))
+                {
+                    MessageBox.Show("Este lote não pode ser excluído, pois está sendo referenciado.");
+                    return;
+                }
+
+                if (await cmd.ExecuteNonQueryAsync() > 0)
+                {
+                    MessageBox.Show("Lote excluído com sucesso!");
+                    comboBox1.Items.Remove(loteSelecionado);
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao excluir o lote.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao excluir lote: " + ex.Message);
+            }
+        }
+
+        private async Task<bool> VerificarReferenciasAsync(NpgsqlConnection conn, int idLote)
+        {
+            const string query = "SELECT COUNT(*) FROM cliente_lote WHERE id_lote = @id_lote";
             using var cmd = new NpgsqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@id_lote", idLote);
 
-            if (cmd.ExecuteNonQuery() > 0)
-            {
-                MessageBox.Show("Lote excluído com sucesso!");
-                comboBox1.Items.Remove(loteSelecionado);
-            }
-            else
-            {
-                MessageBox.Show("Erro ao excluir o lote.");
-            }
+            int count = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+            return count > 0;
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
         }
     }
 }
+
